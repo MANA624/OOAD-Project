@@ -1,0 +1,28 @@
+Mehmet
+------------
+User Interactions -	20
+UI Mockups/Sketches -	20
+Architecture Diagram - 	20
+==========
+Total - 60
+==========
+
+
+Matt
+------------
+Data Storage -		10
+Project Summary - 	10
+Requirements - 		20
+Class Diagram - 	20
+==========
+Total - 60
+==========
+
+Together
+------------
+Use Cases - 		20
+Activity Diagram - 	10
+==========
+Total - 30
+==========
+
