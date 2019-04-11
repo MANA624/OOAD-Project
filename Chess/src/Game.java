@@ -22,7 +22,6 @@ class Game {
 
     boolean makeMove(Move move){
         List<Piece> testMove;
-        System.out.println(pieces);
 
         for(Piece piece: pieces){
             if(isWhitesTurn == piece.getIsWhite() && move.pieceType == piece.getPieceType()){
@@ -32,6 +31,7 @@ class Game {
                 if(testMove != null && !logic.isCheck(isWhitesTurn, pieces)){
                     this.pieces = testMove;
                     this.isWhitesTurn = !this.isWhitesTurn;
+                    System.out.println(pieces);
                     return true;
                 }
             }
