@@ -56,7 +56,7 @@ abstract class MovingService {
     // Check for squares that are illegal for all pieces
     // Currently just checks that it moves on one of the
     // 63 pieces that aren't its own
-    boolean isOnBoard(Move move, Piece piece){
+    private boolean isOnBoard(Move move, Piece piece){
         if(move.row <= 0 || move.row > 8){
             return false;
         }
@@ -69,6 +69,7 @@ abstract class MovingService {
         return true;
     }
 
+    // Checks if the piece is moving to the same square as another piece of the same color
     boolean sameColorCollision(int row, int col, boolean isWhite, List<Piece> otherPieces){
         for(Piece piece : otherPieces){
             if(col == piece.getCol() &&
@@ -80,6 +81,7 @@ abstract class MovingService {
         return false;
     }
 
+    // Checks if the piece is moving to the same square as a piece of the other color
     boolean differentColorCollision(int row, int col, boolean isWhite, List<Piece> otherPieces){
         for(Piece piece : otherPieces){
             if(col == piece.getCol() &&
