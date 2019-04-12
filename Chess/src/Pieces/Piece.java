@@ -8,6 +8,7 @@ public abstract class Piece {
     private final pieceTypes pieceType;
     private int row;
     private int col;
+    private boolean hasMoved;
     protected List<MovingService> behaviors = new ArrayList<>();
 
     Piece(boolean isWhite, pieceTypes pieceType, int row, int col){
@@ -15,6 +16,7 @@ public abstract class Piece {
         this.pieceType = pieceType;
         this.row = row;
         this.col = col;
+        this.hasMoved = false;
     }
 
     public Boolean getIsWhite(){
@@ -86,6 +88,7 @@ public abstract class Piece {
         for(MovingService behavior : behaviors){
             // Should yield complete list with piece re-added
             if((temp = behavior.makeMove(move, passList, this)) != null){
+                this.madeMove();
                 return temp;
             }
         }
@@ -110,5 +113,13 @@ public abstract class Piece {
 
         // If the row and the column are the same, it is the same piece
         return (piece.row == this.row && piece.col == this.col);
+    }
+
+    void madeMove(){
+        this.hasMoved = true;
+    }
+
+    boolean getHasMoved(){
+        return this.hasMoved;
     }
 }

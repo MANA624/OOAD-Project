@@ -44,7 +44,7 @@ class WrapPawn extends MovingService {
         }
         // Make sure the pawn is taking another piece
         if(!differentColorCollision(move.row, move.col, pawn.getIsWhite(), otherpieces)){
-            if(!isEnPassant(pawn, otherpieces)){
+            if(!isEnPassant(move, pawn, otherpieces)){
                 return false;
             }
         }
@@ -53,7 +53,36 @@ class WrapPawn extends MovingService {
         return true;
     }
 
-    private boolean isEnPassant(Pawn pawn, List<Piece> otherPieces){
-        return false;
+    // For the special case of En Passant. Doesn't enforce the fact that
+    // it must be a double move and taken immediately after. Maybe later
+    private boolean isEnPassant(Move move, Pawn pawn, List<Piece> otherPieces){
+        int desiredRow = pawn.getIsWhite() ? 5 : 4;
+        boolean isWhite = pawn.getIsWhite();
+        boolean pawnExists;
+
+        if(pawn.getRow() != desiredRow){
+            return false;
+        }
+        // If the pawn just moved two spaces, no piece can be behind it
+        // The pawn cannot capture two pieces
+        if(sameColorCollision(move.row, move.col, isWhite, otherPieces)){
+            return false;
+        }
+
+        // Check if a pawn exists in the same column to the side of the
+        // moving pawn
+        pawnExists = false;
+        for(Piece piece : otherPieces){
+            if(piece.getIsWhite() != isWhite &&
+                    piece.getPieceType() == pieceTypes.P &&
+                    piece.getCol() == move.col &&
+                    piece.getRow() == desiredRow){
+                piece.move(move.row, move.col);
+                pawnExists = true;
+            }
+        }
+
+        // TODO: Check and make sure that the other piece just moved 2 spaces last turn
+        return pawnExists;
     }
 }

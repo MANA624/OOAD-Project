@@ -15,27 +15,28 @@ abstract class MovingService {
         if(!checkValid(move, otherPieces, thisPiece)){
             return null;
         }
-
-        thisPiece.move(move.row, move.col);
-
-        if(!checkTake(thisPiece, otherPieces)){
+        // Check if we took a piece
+        if(!checkTake(move.row, move.col, thisPiece.getIsWhite(), otherPieces)){
             return null;
         }
+
+        // Changing the state of the board
+        thisPiece.move(move.row, move.col);
 
         otherPieces.add(thisPiece);
         return otherPieces;
     }
 
-    private boolean checkTake(Piece thisPiece, List<Piece> otherPieces){
+    private boolean checkTake(int row, int col, boolean isWhite, List<Piece> otherPieces){
         Piece piece;
         boolean isTake = false;
         int i;
 
         for(i=0; i<otherPieces.size(); i++){
             piece = otherPieces.get(i);
-            if(thisPiece.getCol() == piece.getCol() && thisPiece.getRow() == piece.getRow()){
+            if(col == piece.getCol() && row == piece.getRow()){
                 // A piece is captured. Remove that piece
-                if(thisPiece.getIsWhite() != piece.getIsWhite()){
+                if(isWhite != piece.getIsWhite()){
                     isTake = true;
                     break;
                 }
@@ -90,6 +91,14 @@ abstract class MovingService {
                 return true;
             }
         }
+        return false;
+    }
+
+    // This is a nice helper function. Could be useful when determining if the king is in
+    // check. Also useful for determining if a player can castle (The two spaces closest
+    // to the king are not threatened
+    // TODO: Implement this function
+    boolean sqaureIsThreatened(int row, int col, boolean isWhite, List<Piece> otherPieces){
         return false;
     }
 }
