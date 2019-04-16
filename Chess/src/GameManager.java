@@ -70,6 +70,9 @@ class GameManager {
                     uinput.printToUser("Invalid move. Still " + color + "'s turn");
                 }
             }
+            if(game.isCheck()){
+                uinput.printToUser("Check!");
+            }
         }
     }
 }

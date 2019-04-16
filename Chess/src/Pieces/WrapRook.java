@@ -52,7 +52,6 @@ class WrapRook extends MovingService {
                 if(sameColorCollision(row, col, isWhite, otherPieces)){
                     return false;
                 }
-                System.out.println(thisPiece);
                 // Check if you've collided with a piece of the other color, and you
                 // haven't arrived at the intended spot. This is always illegal
                 if(differentColorCollision(row, col, isWhite, otherPieces) && col != move.col){

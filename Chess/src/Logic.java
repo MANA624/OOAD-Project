@@ -1,12 +1,33 @@
 import java.util.List;
-import Pieces.Piece;
+import Pieces.*;
 
 public class Logic {
     public boolean isCheckmate(){
         return false;
     }
 
-    public boolean isCheck(boolean onWhite, List<Piece> pieces){
+    boolean isCheck(boolean againstWhite, List<Piece> pieces){
+        Piece king = null;
+        for(Piece piece: pieces){
+            if(piece.getPieceType() == pieceTypes.K && piece.getIsWhite() == againstWhite){
+                king = piece;
+                break;
+            }
+        }
+
+        // This shouldn't have to exist, but it makes Java happy
+        if(king == null){
+            return false;
+        }
+
+        for(Piece piece : pieces){
+            if(piece.getIsWhite() != againstWhite){
+                if(piece.canMoveToSquare(pieces, king.getRow(), king.getCol())){
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

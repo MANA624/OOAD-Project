@@ -19,6 +19,43 @@ public abstract class Piece {
         this.hasMoved = false;
     }
 
+    public boolean canMoveToSquare(List<Piece> pieces, int row, int col){
+        boolean isCastle = false;
+        Move move = new Move(isCastle, isCastle, this.getPieceType(), col, row, getRow(), getCol(), true);
+        List<Piece> passList = removePiece(this, pieces);
+
+        for(MovingService service : behaviors){
+            if(service.checkValid(move, passList, this)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Piece> makeMove(Move move, List<Piece> pieces){
+        List<Piece> temp;
+        List<Piece> passList = removePiece(this, pieces);
+
+
+        for(MovingService behavior : behaviors){
+            // Should yield complete list with piece re-added
+            if((temp = behavior.makeMove(move, passList, this)) != null){
+                this.madeMove();
+                return temp;
+            }
+        }
+        // No successful move found
+        return null;
+    }
+
+    void madeMove(){
+        this.hasMoved = true;
+    }
+
+    boolean getHasMoved(){
+        return this.hasMoved;
+    }
+
     public Boolean getIsWhite(){
         return this.isWhite;
     }
@@ -32,11 +69,11 @@ public abstract class Piece {
         this.col = col;
     }
 
-    int getRow(){
+    public int getRow(){
         return this.row;
     }
 
-    int getCol(){
+    public int getCol(){
         return this.col;
     }
 
@@ -72,30 +109,6 @@ public abstract class Piece {
         return "A " + color + " " + type + " on " + (char)(this.col+96) + this.row;
     }
 
-    public List<Piece> makeMove(Move move, List<Piece> pieces){
-        List<Piece> temp;
-        List<Piece> passList = new ArrayList<>(pieces);
-
-        // Remove the moving piece out of the list to pass to the moving service
-        // This way the service knows which piece is being moved
-        for(int i=0; i<pieces.size(); i++){
-            if(pieces.get(i).equals(this)){
-                passList.remove(i);
-                break;
-            }
-        }
-
-        for(MovingService behavior : behaviors){
-            // Should yield complete list with piece re-added
-            if((temp = behavior.makeMove(move, passList, this)) != null){
-                this.madeMove();
-                return temp;
-            }
-        }
-        // No successful move found
-        return null;
-    }
-
     @Override
     public boolean equals(Object obj){
         // Check if the references are the same
@@ -104,7 +117,7 @@ public abstract class Piece {
         }
 
         // Check if it's null, then if it's a different class
-        if(obj == null || obj.getClass()!= this.getClass()) {
+        if(obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
 
@@ -115,11 +128,23 @@ public abstract class Piece {
         return (piece.row == this.row && piece.col == this.col);
     }
 
-    void madeMove(){
-        this.hasMoved = true;
-    }
+    // Turned this into a helper function because it was done a few times. It's a strange
+    // way of going about it, but before calling it you should make a copy of the list of
+    // pieces that you want to alter, then pass in the original list, the copy, and the row
+    // and column of the piece you want to remove
+    // TODO: Implement and refactor where it's used other places
+    private List<Piece> removePiece(Piece piece, List<Piece> allPieces){
+        List<Piece> newList = new ArrayList<>(allPieces);
 
-    boolean getHasMoved(){
-        return this.hasMoved;
+        // Remove the moving piece out of the list to pass to the moving service
+        // This way the service knows which piece is being moved
+        for(int i=0; i<allPieces.size(); i++){
+            if(allPieces.get(i).equals(this)){
+                newList.remove(i);
+                break;
+            }
+        }
+
+        return newList;
     }
 }

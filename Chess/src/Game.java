@@ -28,10 +28,13 @@ class Game {
                 testMove = piece.makeMove(move, pieces);
                 // This is considered a successful move. Is legal
                 // and doesn't cause check against moving player
-                if(testMove != null && !logic.isCheck(isWhitesTurn, pieces)){
+                if(testMove != null && !logic.isCheck(isWhitesTurn, testMove)){
                     this.pieces = testMove;
                     this.isWhitesTurn = !this.isWhitesTurn;
                     System.out.println(pieces);
+                    if(logic.isCheck(!isWhitesTurn, pieces)){
+
+                    }
                     return true;
                 }
             }
@@ -41,6 +44,10 @@ class Game {
 
     boolean isGameEnd(){
         return gameIsFinished;
+    }
+
+    boolean isCheck(){
+        return logic.isCheck(isWhitesTurn, pieces);
     }
 
     String getPlayerTurn(){
