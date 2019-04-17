@@ -13,8 +13,8 @@ public class Move {
     public final int startCol;
     public final boolean isTake;
 
-    public Move(boolean isKingCastle, boolean isQueenCastle, pieceTypes pieceType, int col,
-                int row, int startRow, int startCol, boolean isTake){
+    public Move(boolean isKingCastle, boolean isQueenCastle, pieceTypes pieceType, int row, int col,
+                int startRow, int startCol, boolean isTake){
         this.isKingCastle = isKingCastle;
         this.isQueenCastle = isQueenCastle;
         this.pieceType = pieceType;
@@ -28,6 +28,6 @@ public class Move {
 
     // Just for debugging. Please remove if found.
     public String toString(){
-        return "row:" + row + "\tcol:" + col + "\tstartRow:" + startRow + "\tstartCol:" + startCol + "\tisTake:" + isTake;
+        return "Piecetype:" + pieceType + "\trow:" + row + "\tcol:" + col + "\tstartRow:" + startRow + "\tstartCol:" + startCol + "\tisTake:" + isTake;
     }
 }

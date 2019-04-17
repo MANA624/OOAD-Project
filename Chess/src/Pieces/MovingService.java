@@ -1,12 +1,18 @@
 package Pieces;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 abstract class MovingService {
-    abstract boolean checkValid(Move move, List<Piece> otherPieces, Piece thisPiece);
+    abstract boolean checkValid(Move move, List<Piece> pieces, Piece thisPiece);
 
     // Contains the functionality that all pieces will have
-    List<Piece> makeMove(Move move, List<Piece> otherPieces, Piece thisPiece){
+    List<Move> makeMove(Move move, List<Piece> pieces, Piece thisPiece){
+        List<Piece> otherPieces = removePiece(thisPiece, pieces);
+        List<Move> resultingMoves = null;
+        pieceTypes taking;
+
         if(!isOnBoard(move, thisPiece)){
             return null;
         }
@@ -15,43 +21,39 @@ abstract class MovingService {
         if(!checkValid(move, otherPieces, thisPiece)){
             return null;
         }
-        // Check if we took a piece
-        if(!checkTake(move.row, move.col, thisPiece.getIsWhite(), otherPieces)){
+        // Check if we moved to a square of a piece of the same color
+        // Shouldn't ever be not null for a legal move
+        if(checkTake(move.row, move.col, !thisPiece.getIsWhite(), otherPieces) != null){
+            System.out.println("here");
             return null;
         }
 
-        // Changing the state of the board
-        thisPiece.move(move.row, move.col);
+        taking = checkTake(move.row, move.col, thisPiece.getIsWhite(), otherPieces);
 
-        otherPieces.add(thisPiece);
-        return otherPieces;
+        resultingMoves = new LinkedList<>();
+        resultingMoves.add(new Move(false, false, thisPiece.getPieceType(), move.row, move.col,
+                thisPiece.getRow(), thisPiece.getCol(), false));
+        if(taking != null){
+            resultingMoves.add(new Move(false, false, taking, -1, -1, move.row, move.col, true));
+        }
+
+        return resultingMoves;
     }
 
-    private boolean checkTake(int row, int col, boolean isWhite, List<Piece> otherPieces){
-        Piece piece;
-        boolean isTake = false;
-        int i;
+    // Checks if there's a piece on the square you're moving to. If yes, then it returns the
+    // type of piece that it is. If no, then it returns null
+    private pieceTypes checkTake(int row, int col, boolean isWhite, List<Piece> pieces){
 
-        for(i=0; i<otherPieces.size(); i++){
-            piece = otherPieces.get(i);
-            if(col == piece.getCol() && row == piece.getRow()){
-                // A piece is captured. Remove that piece
+        for(Piece piece : pieces){
+            if(row == piece.getRow() && col == piece.getCol()){
+                // A piece is captured. Return that piece type
                 if(isWhite != piece.getIsWhite()){
-                    isTake = true;
-                    break;
-                }
-                // A piece moves to a square of another piece of the same color
-                // This code running means there's a bug
-                else{
-                    return false;
+                    return piece.getPieceType();
                 }
             }
         }
 
-        if(isTake){
-            otherPieces.remove(i);
-        }
-        return true;
+        return null;
     }
 
     // Check for squares that are illegal for all pieces
@@ -100,5 +102,25 @@ abstract class MovingService {
     // TODO: Implement this function
     boolean sqaureIsThreatened(int row, int col, boolean isWhite, List<Piece> otherPieces){
         return false;
+    }
+
+    // Turned this into a helper function because it was done a few times. It's a strange
+    // way of going about it, but before calling it you should make a copy of the list of
+    // pieces that you want to alter, then pass in the original list, the copy, and the row
+    // and column of the piece you want to remove
+    // TODO: Implement and refactor where it's used other places
+    private List<Piece> removePiece(Piece piece, List<Piece> allPieces){
+        List<Piece> newList = new ArrayList<>(allPieces);
+
+        // Remove the moving piece out of the list to pass to the moving service
+        // This way the service knows which piece is being moved
+        for(int i=0; i<allPieces.size(); i++){
+            if(allPieces.get(i).equals(piece)){
+                newList.remove(i);
+                break;
+            }
+        }
+
+        return newList;
     }
 }

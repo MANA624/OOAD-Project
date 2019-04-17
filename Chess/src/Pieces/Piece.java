@@ -9,7 +9,7 @@ public abstract class Piece {
     private int row;
     private int col;
     private boolean hasMoved;
-    protected List<MovingService> behaviors = new ArrayList<>();
+    List<MovingService> behaviors = new ArrayList<>();
 
     Piece(boolean isWhite, pieceTypes pieceType, int row, int col){
         this.isWhite = isWhite;
@@ -21,27 +21,24 @@ public abstract class Piece {
 
     public boolean canMoveToSquare(List<Piece> pieces, int row, int col){
         boolean isCastle = false;
-        Move move = new Move(isCastle, isCastle, this.getPieceType(), col, row, getRow(), getCol(), true);
-        List<Piece> passList = removePiece(this, pieces);
+        Move move = new Move(isCastle, isCastle, this.getPieceType(), row, col, getRow(), getCol(), true);
 
         for(MovingService service : behaviors){
-            if(service.checkValid(move, passList, this)){
+            if(service.checkValid(move, pieces, this)){
                 return true;
             }
         }
         return false;
     }
 
-    public List<Piece> makeMove(Move move, List<Piece> pieces){
-        List<Piece> temp;
-        List<Piece> passList = removePiece(this, pieces);
+    public List<Move> makeMove(Move move, List<Piece> pieces){
+        List<Move> returnMoves;
 
 
+        // Go through each moving service, then if one is valid, return it
         for(MovingService behavior : behaviors){
-            // Should yield complete list with piece re-added
-            if((temp = behavior.makeMove(move, passList, this)) != null){
-                this.madeMove();
-                return temp;
+            if((returnMoves = behavior.makeMove(move, pieces, this)) != null){
+                return returnMoves;
             }
         }
         // No successful move found
@@ -125,26 +122,6 @@ public abstract class Piece {
         Piece piece = (Piece) obj;
 
         // If the row and the column are the same, it is the same piece
-        return (piece.row == this.row && piece.col == this.col);
-    }
-
-    // Turned this into a helper function because it was done a few times. It's a strange
-    // way of going about it, but before calling it you should make a copy of the list of
-    // pieces that you want to alter, then pass in the original list, the copy, and the row
-    // and column of the piece you want to remove
-    // TODO: Implement and refactor where it's used other places
-    private List<Piece> removePiece(Piece piece, List<Piece> allPieces){
-        List<Piece> newList = new ArrayList<>(allPieces);
-
-        // Remove the moving piece out of the list to pass to the moving service
-        // This way the service knows which piece is being moved
-        for(int i=0; i<allPieces.size(); i++){
-            if(allPieces.get(i).equals(this)){
-                newList.remove(i);
-                break;
-            }
-        }
-
-        return newList;
+        return (piece.row == this.row && piece.col == this.col && piece.getIsWhite() == this.isWhite);
     }
 }

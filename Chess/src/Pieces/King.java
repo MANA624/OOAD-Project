@@ -9,7 +9,7 @@ class King extends Piece {
         behaviors.add(new WrapKing());
     }
 
-    public List<Piece> makeMove(Move move, List<Piece> pieces){
+    public List<Move> makeMove(Move move, List<Piece> pieces){
         if(move.isKingCastle || move.isQueenCastle){
             return castling(pieces, move);
         }
@@ -17,7 +17,7 @@ class King extends Piece {
         return super.makeMove(move, pieces);
     }
 
-    private List<Piece> castling(List<Piece> pieces, Move move){
+    private List<Move> castling(List<Piece> pieces, Move move){
         King king = this;
         Rook rook = null;
         int rookCol = move.isKingCastle ? 8 : 1;
@@ -25,7 +25,7 @@ class King extends Piece {
         int kingInd = -1;
         int rookInd = -1;
         int destCol;
-        List<Piece> temp;
+        List<Move> returnMoves;
 
         List<Piece> passList = new ArrayList<>(pieces);
 
@@ -57,12 +57,12 @@ class King extends Piece {
         // ever going to have one service. If more is added, just
         // make sure that the king service is first
         WrapKing service = (WrapKing)behaviors.get(0);
-        if((temp = service.castling(move, passList, king, rook)) != null){
-            king.madeMove();
-            rook.madeMove();
-            return temp;
+        if((returnMoves = service.castling(move, passList, king, rook)) == null){
+            return null;
         }
 
-        return null;
+        king.madeMove();
+        rook.madeMove();
+        return returnMoves;
     }
 }

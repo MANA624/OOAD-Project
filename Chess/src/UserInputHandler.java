@@ -149,7 +149,7 @@ public class UserInputHandler {
         workingChar = move.charAt(0);
         row = workingChar - 48;
 
-        return new Move(false, false, type, col, row, startRow, startCol, isTake);
+        return new Move(false, false, type, row, col, startRow, startCol, isTake);
     }
 
     int getInteger(){

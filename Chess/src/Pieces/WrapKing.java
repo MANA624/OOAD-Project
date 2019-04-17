@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class WrapKing extends MovingService {
@@ -17,7 +18,8 @@ class WrapKing extends MovingService {
         return true;
     }
 
-    List<Piece> castling(Move move, List<Piece> otherPieces, King king, Rook rook){
+    List<Move> castling(Move move, List<Piece> otherPieces, King king, Rook rook){
+        List<Move> returnMoves = null;
         boolean isWhite = king.getIsWhite();
         int backRow = isWhite ? 1 : 8;
         int destCol;
@@ -52,17 +54,15 @@ class WrapKing extends MovingService {
         }
 
         // Success!
+        returnMoves = new ArrayList<>();
         // Update king location
         destCol = move.isKingCastle ? 7 : 3;
-        king.move(backRow, destCol);
+        returnMoves.add(new Move(false, false, pieceTypes.K, backRow, destCol, backRow, 5, false));
 
         // Update rook location
         destCol = move.isKingCastle ? 6 : 4;
-        rook.move(backRow, destCol);
+        returnMoves.add(new Move(false, false, pieceTypes.R, backRow, destCol, backRow, rook.getCol(), false));
 
-        otherPieces.add(rook);
-        otherPieces.add(king);
-
-        return otherPieces;
+        return returnMoves;
     }
 }

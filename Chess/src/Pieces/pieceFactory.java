@@ -102,4 +102,23 @@ public class pieceFactory{
         }
         return null;
     }
+
+    public static Piece makeTemp(pieceTypes type, int row, int col, boolean isWhite){
+        switch (type){
+            case R:
+                return new Rook(isWhite, row, col);
+            case N:
+                return new Knight(isWhite, row, col);
+            case B:
+                return new Bishop(isWhite, row, col);
+            case Q:
+                return new Queen(isWhite, row, col);
+            case K:
+                return new King(isWhite, row, col);
+            case P:
+                return new Pawn(isWhite, row, col);
+            default:
+                return null;
+        }
+    }
 }

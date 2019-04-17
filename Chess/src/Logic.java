@@ -2,7 +2,8 @@ import java.util.List;
 import Pieces.*;
 
 public class Logic {
-    public boolean isCheckmate(){
+    boolean isCheckmate(boolean againstWhite, List<Piece> pieces) {
+        // return isCheck(againstWhite, pieces);
         return false;
     }
 
