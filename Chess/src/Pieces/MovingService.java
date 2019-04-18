@@ -10,8 +10,9 @@ abstract class MovingService {
     // Contains the functionality that all pieces will have
     List<Move> makeMove(Move move, List<Piece> pieces, Piece thisPiece){
         List<Piece> otherPieces = removePiece(thisPiece, pieces);
-        List<Move> resultingMoves = null;
+        List<Move> resultingMoves;
         pieceTypes taking;
+        boolean isCastle = false;
 
         if(!isOnBoard(move, thisPiece)){
             return null;
@@ -31,10 +32,10 @@ abstract class MovingService {
         taking = checkTake(move.row, move.col, thisPiece.getIsWhite(), otherPieces);
 
         resultingMoves = new LinkedList<>();
-        resultingMoves.add(new Move(false, false, thisPiece.getPieceType(), move.row, move.col,
+        resultingMoves.add(new Move(isCastle, isCastle, thisPiece.getPieceType(), move.row, move.col,
                 thisPiece.getRow(), thisPiece.getCol(), false));
         if(taking != null){
-            resultingMoves.add(new Move(false, false, taking, -1, -1, move.row, move.col, true));
+            resultingMoves.add(new Move(isCastle, isCastle, taking, -1, -1, move.row, move.col, true));
         }
 
         return resultingMoves;
@@ -99,16 +100,22 @@ abstract class MovingService {
     // This is a nice helper function. Could be useful when determining if the king is in
     // check. Also useful for determining if a player can castle (The two spaces closest
     // to the king are not threatened
-    // TODO: Implement this function
-    boolean sqaureIsThreatened(int row, int col, boolean isWhite, List<Piece> otherPieces){
+    boolean sqaureIsThreatened(int row, int col, boolean attackerIsWhite, List<Piece> pieces)
+    {
+        for(Piece piece : pieces){
+            if(piece.getIsWhite() == attackerIsWhite){
+                if(piece.canMoveToSquare(pieces, row, col)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    // Turned this into a helper function because it was done a few times. It's a strange
-    // way of going about it, but before calling it you should make a copy of the list of
-    // pieces that you want to alter, then pass in the original list, the copy, and the row
-    // and column of the piece you want to remove
-    // TODO: Implement and refactor where it's used other places
+    // Turned this into a helper function because it was done a few times. Sometimes
+    // it's useful to work with a copy of the list that doesn't contain the
+    // piece in question. Note this prevents altering the list that was passed in,
+    // and the objects contained still should not be altered by the recipient!
     private List<Piece> removePiece(Piece piece, List<Piece> allPieces){
         List<Piece> newList = new ArrayList<>(allPieces);
 

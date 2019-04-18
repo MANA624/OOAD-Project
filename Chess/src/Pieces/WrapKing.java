@@ -47,7 +47,7 @@ class WrapKing extends MovingService {
         startInd = move.isKingCastle ? 5 : 3;
         endInd = startInd + 2;
         for(int i=startInd; i<=endInd; i++) {
-            if (sqaureIsThreatened(backRow, i, isWhite, otherPieces)) {
+            if (sqaureIsThreatened(backRow, i, !isWhite, otherPieces)) {
                 return null;
             }
         }
