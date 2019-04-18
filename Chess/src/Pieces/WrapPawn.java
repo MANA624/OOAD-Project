@@ -77,7 +77,6 @@ class WrapPawn extends MovingService {
                     piece.getPieceType() == pieceTypes.P &&
                     piece.getCol() == move.col &&
                     piece.getRow() == desiredRow){
-                piece.move(move.row, move.col);
                 pawnExists = true;
             }
         }

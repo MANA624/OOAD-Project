@@ -45,9 +45,6 @@ public abstract class Piece {
         return null;
     }
 
-    void madeMove(){
-        this.hasMoved = true;
-    }
 
     boolean getHasMoved(){
         return this.hasMoved;
@@ -61,9 +58,15 @@ public abstract class Piece {
         return this.pieceType;
     }
 
-    public void move(int row, int col){
-        this.row = row;
-        this.col = col;
+    public void move(Move move){
+        this.row = move.row;
+        this.col = move.col;
+        this.hasMoved = true;
+    }
+    public void undo(Move move){
+        this.row = move.startRow;
+        this.col = move.startCol;
+        this.hasMoved = false;
     }
 
     public int getRow(){

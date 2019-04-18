@@ -61,8 +61,6 @@ class King extends Piece {
             return null;
         }
 
-        king.madeMove();
-        rook.madeMove();
         return returnMoves;
     }
 }

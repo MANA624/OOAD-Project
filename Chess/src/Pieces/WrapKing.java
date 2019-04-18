@@ -14,12 +14,11 @@ class WrapKing extends MovingService {
         }
         // Don't need to check if it's moving into check because we do that
         // anyways whenever we move any kind of piece
-
         return true;
     }
 
     List<Move> castling(Move move, List<Piece> otherPieces, King king, Rook rook){
-        List<Move> returnMoves = null;
+        List<Move> returnMoves;
         boolean isWhite = king.getIsWhite();
         int backRow = isWhite ? 1 : 8;
         int destCol;

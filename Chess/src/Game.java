@@ -2,7 +2,6 @@ import Pieces.Piece;
 import Pieces.Move;
 import Pieces.pieceFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class Game {
@@ -84,7 +83,7 @@ class Game {
                 pieceFound = false;
                 for (Piece piece : pieces) {
                     if(piece.equals(temp)){
-                        piece.move(move.row, move.col);
+                        piece.move(move);
                         pieceFound = true;
                         break;
                     }
@@ -113,7 +112,7 @@ class Game {
                 temp = pieceFactory.makeTemp(move.pieceType, move.row, move.col, isWhitesTurn);
                 for(Piece piece : pieces){
                     if(piece.equals(temp)){
-                        piece.move(move.startRow, move.startCol);
+                        piece.undo(move);
                         break;
                     }
                 }
