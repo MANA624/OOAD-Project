@@ -4,8 +4,7 @@ import java.util.List;
 
 class WrapPawn extends MovingService {
     // A really basic test code to make sure pawns can move. Will need to be fixed
-    // TODO: Write almost all of functionality
-    public boolean checkValid(Move move, List<Piece> otherPieces, Piece thisPiece){
+    public boolean checkPieceMovement(Move move, List<Piece> otherPieces, Piece thisPiece){
         Pawn pawn = (Pawn)thisPiece;
         int direction = pawn.getIsWhite() ? 1 : -1;
         int row = pawn.getRow();

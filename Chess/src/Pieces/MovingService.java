@@ -5,7 +5,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 abstract class MovingService {
-    abstract boolean checkValid(Move move, List<Piece> pieces, Piece thisPiece);
+    abstract boolean checkPieceMovement(Move move, List<Piece> pieces, Piece thisPiece);
+
+    boolean checkValid(Move move, List<Piece> pieces, Piece thisPiece){
+        if(!isOnBoard(move, thisPiece)){
+            return false;
+        }
+
+        // The only thing that varies between pieces
+        if(!checkPieceMovement(move, pieces, thisPiece)){
+            return false;
+        }
+
+        // Check if we moved to a square of a piece of the same color
+        // Shouldn't ever be not null for a legal move
+        if(checkTake(move.row, move.col, !thisPiece.getIsWhite(), pieces) != null){
+            return false;
+        }
+
+        return true;
+    }
 
     // Contains the functionality that all pieces will have
     List<Move> makeMove(Move move, List<Piece> pieces, Piece thisPiece){
@@ -14,20 +33,11 @@ abstract class MovingService {
         pieceTypes taking;
         boolean isCastle = false;
 
-        if(!isOnBoard(move, thisPiece)){
-            return null;
-        }
-
-        // The only thing that varies between pieces
+        // Check if the move is actually legal
         if(!checkValid(move, otherPieces, thisPiece)){
             return null;
         }
-        // Check if we moved to a square of a piece of the same color
-        // Shouldn't ever be not null for a legal move
-        if(checkTake(move.row, move.col, !thisPiece.getIsWhite(), otherPieces) != null){
-            System.out.println("here");
-            return null;
-        }
+
 
         taking = checkTake(move.row, move.col, thisPiece.getIsWhite(), otherPieces);
 

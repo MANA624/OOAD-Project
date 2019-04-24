@@ -3,7 +3,7 @@ package Pieces;
 import java.util.List;
 
 class WrapRook extends MovingService {
-    public boolean checkValid(Move move, List<Piece> otherPieces, Piece thisPiece){
+    public boolean checkPieceMovement(Move move, List<Piece> otherPieces, Piece thisPiece){
         int direction;
         int row;
         int col;

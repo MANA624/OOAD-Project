@@ -3,7 +3,7 @@ package Pieces;
 import java.util.List;
 
 class WrapBishop extends MovingService {
-    public boolean checkValid(Move move, List<Piece> otherPieces, Piece thisPiece){
+    public boolean checkPieceMovement(Move move, List<Piece> otherPieces, Piece thisPiece){
         int row = thisPiece.getRow();
         int col = thisPiece.getCol();
         boolean isWhite = thisPiece.getIsWhite();

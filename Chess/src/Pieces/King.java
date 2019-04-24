@@ -3,7 +3,7 @@ package Pieces;
 import java.util.ArrayList;
 import java.util.List;
 
-class King extends Piece {
+public class King extends Piece {
     King(boolean isWhite, int row, int col){
         super(isWhite, pieceTypes.K, row, col);
         behaviors.add(new WrapKing());

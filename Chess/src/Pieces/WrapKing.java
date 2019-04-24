@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class WrapKing extends MovingService {
-    public boolean checkValid(Move move, List<Piece> otherPieces, Piece thisPiece){
+    public boolean checkPieceMovement(Move move, List<Piece> otherPieces, Piece thisPiece){
         int row = thisPiece.getRow();
         int col = thisPiece.getCol();
 

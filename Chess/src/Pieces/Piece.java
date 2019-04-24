@@ -19,6 +19,10 @@ public abstract class Piece {
         this.hasMoved = false;
     }
 
+    // A function that tests if a piece can move to a specified square. It does NOT
+    // check if the resulting move results in placing one's own king in check, as this
+    // doesn't matter when considering if the king will be in check or the rook
+    // will be in danger after moving. In either case it still counts
     public boolean canMoveToSquare(List<Piece> pieces, int row, int col){
         boolean isCastle = false;
         Move move = new Move(isCastle, isCastle, this.getPieceType(), row, col, getRow(), getCol(), true);
@@ -33,7 +37,6 @@ public abstract class Piece {
 
     public List<Move> makeMove(Move move, List<Piece> pieces){
         List<Move> returnMoves;
-
 
         // Go through each moving service, then if one is valid, return it
         for(MovingService behavior : behaviors){
@@ -58,7 +61,7 @@ public abstract class Piece {
         return this.pieceType;
     }
 
-    public void move(Move move){
+    public void applyMove(Move move){
         this.row = move.row;
         this.col = move.col;
         this.hasMoved = true;
