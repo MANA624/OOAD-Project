@@ -5,11 +5,11 @@ import java.util.List;
 
 public abstract class Piece {
     private final boolean isWhite;
-    private final pieceTypes pieceType;
+    private pieceTypes pieceType;
     private int row;
     private int col;
     private boolean hasMoved;
-    List<MovingService> behaviors = new ArrayList<>();
+    protected final List<MovingService> behaviors = new ArrayList<>();
 
     Piece(boolean isWhite, pieceTypes pieceType, int row, int col){
         this.isWhite = isWhite;
@@ -70,6 +70,10 @@ public abstract class Piece {
         this.row = move.startRow;
         this.col = move.startCol;
         this.hasMoved = false;
+    }
+
+    protected void setPieceType(pieceTypes type){
+        this.pieceType = type;
     }
 
     public int getRow(){
