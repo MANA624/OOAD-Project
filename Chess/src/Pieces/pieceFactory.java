@@ -103,7 +103,7 @@ public class pieceFactory{
         return null;
     }
 
-    public static Piece makeTemp(pieceTypes type, int row, int col, boolean isWhite){
+    public static Piece makeNewPiece(pieceTypes type, int row, int col, boolean isWhite){
         switch (type){
             case R:
                 return new Rook(isWhite, row, col);

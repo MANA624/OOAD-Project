@@ -165,7 +165,7 @@ public class Logic {
 
         for(Move move : moves) {
             if(move.isTake) {
-                temp = pieceFactory.makeTemp(move.pieceType, move.startRow, move.startCol, !isWhitesTurn);
+                temp = pieceFactory.makeNewPiece(move.pieceType, move.startRow, move.startCol, !isWhitesTurn);
                 pieceFound = false;
                 for(Piece piece : pieces){
                     if(piece.equals(temp)){
@@ -178,7 +178,7 @@ public class Logic {
                     pieces.remove(takenPiece);
             }
             else{
-                temp = pieceFactory.makeTemp(move.pieceType, move.startRow, move.startCol, isWhitesTurn);
+                temp = pieceFactory.makeNewPiece(move.pieceType, move.startRow, move.startCol, isWhitesTurn);
                 pieceFound = false;
                 for (Piece piece : pieces) {
                     if(piece.equals(temp)){
@@ -208,7 +208,7 @@ public class Logic {
 
         for(Move move : moves){
             if(!move.isTake){
-                temp = pieceFactory.makeTemp(move.pieceType, move.row, move.col, isWhitesTurn);
+                temp = pieceFactory.makeNewPiece(move.pieceType, move.row, move.col, isWhitesTurn);
                 for(Piece piece : pieces){
                     if(piece.equals(temp)){
                         piece.undo(move);
