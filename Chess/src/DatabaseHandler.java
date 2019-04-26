@@ -15,6 +15,7 @@ class DatabaseHandler {
 
     }
 
+    // connect to MySQL database using JDBC driver
     public String connectToDatabase(){
         if (serverRunning) return "Already connected to database!";
 
@@ -37,6 +38,7 @@ class DatabaseHandler {
         return "Connected to database!";
     }
 
+    // check if scores table exists in database
     public String loadTable(){
         if(!serverRunning) return "Not connected to any SQL database!";
         if(tableInitialized) return "Table already initialized!";
@@ -55,6 +57,7 @@ class DatabaseHandler {
         return "Table initialized. Ready to show/update scores!";
     }
 
+    // show specified number of top scores, ordered by win/loss ratio
     public String getScores(int numRetrieve){
 
         if(!tableInitialized) return "Hey! The table is not initialized!";
@@ -83,9 +86,9 @@ class DatabaseHandler {
         return output;
     }
 
+    // create scores table if it already doesn't exist
     public String createTable(){
         if(!serverRunning) return "Not connected to any SQL database!";
-
 
         try {
             Statement statement = conn.createStatement();
@@ -104,11 +107,12 @@ class DatabaseHandler {
         return "Table successfully created. No data currently";
     }
 
-    public String updateScores(String username, int result){
+    // update the score for a particular username
+    public boolean updateScores(String username, int result){
         // Update the MySQL database for a username and what they
         // got. Should be as simple as incrementing a number in the database
 
-        if(!tableInitialized) return "Can't update score! Table hasn't been initialized yet!";
+        if(!tableInitialized) return false;
 
         Boolean usernameExists = false;
 
@@ -121,22 +125,23 @@ class DatabaseHandler {
             if (rs.next()) usernameExists = true;
 
             if(result == 0){
-                if (usernameExists) sqlStatement = String.format("UPDATE scores SET losses=losses+1 WHERE username=%s ", username);
-                else  sqlStatement = String.format("INSERT INTO scores VALUES (%s, 0, 1, 0) ", username);
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET losses=losses+1 WHERE username='%s'", username);
+                else  sqlStatement = String.format("INSERT INTO scores VALUES ('%s', 0, 1, 0) ", username);
             }
             else if(result == 1){
-                if (usernameExists) sqlStatement = String.format("UPDATE scores SET wins=wins+1 WHERE username=%s ", username);
-                else sqlStatement = String.format("INSERT INTO scores VALUES (%s, 1, 0, 0) ", username);
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET wins=wins+1 WHERE username='%s'", username);
+                else sqlStatement = String.format("INSERT INTO scores VALUES ('%s', 1, 0, 0) ", username);
             }
             else if(result == 2){
-                if (usernameExists) sqlStatement = String.format("UPDATE scores SET draws=draws+1 WHERE username=%s ", username);
-                else sqlStatement = String.format("INSERT INTO scores VALUES (%s, 0, 0, 1) ", username);
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET draws=draws+1 WHERE username='%s'", username);
+                else sqlStatement = String.format("INSERT INTO scores VALUES (''%s', 0, 0, 1) ", username);
             }
-
-            return "Successfully updated scores!";
+            statement = conn.createStatement();
+            statement.executeUpdate(sqlStatement);
+            return true;
 
         } catch(Exception e){
-              return "Error! Could not update scores!";
+              return false;
         }
     }
 

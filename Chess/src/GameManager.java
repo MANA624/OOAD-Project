@@ -77,13 +77,26 @@ class GameManager {
             }
         }
 
+
         if (!database.getTableStatus()) {
           uinput.printToUser("Sorry, your scores can't be recorded because there is no table initialized!");
           return;
         }
 
-        
+        uinput.printToUser("White player, please enter your username:");
+        String whiteUsername = uinput.getUsername();
+        uinput.printToUser("Black player, please enter your username:");
+        String blackUsername = uinput.getUsername();
 
+  
+        if (game.getWhiteWon()) {
+          database.updateScores(whiteUsername, 1);
+          database.updateScores(blackUsername, 0);
+        }
+        else {
+          database.updateScores(whiteUsername, 0);
+          database.updateScores(blackUsername, 1);
+        }
 
     }
 }
