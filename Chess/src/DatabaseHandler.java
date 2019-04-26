@@ -16,9 +16,7 @@ class DatabaseHandler {
     }
 
     public String connectToDatabase(){
-        if (serverRunning){
-            return "Already connected to database!";
-        }
+        if (serverRunning) return "Already connected to database!";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -40,23 +38,16 @@ class DatabaseHandler {
     }
 
     public String loadTable(){
-        if(!serverRunning){
-            return "Not connected to any SQL database!";
-        }
-        if(tableInitialized){
-            return "Table already initialized!";
-        }
+        if(!serverRunning) return "Not connected to any SQL database!";
+        if(tableInitialized) return "Table already initialized!";
 
         try{
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet rs = dbm.getTables("chess", null, "scores", null);
 
-            if (rs.next()){
-                tableInitialized = true;
-            }
-            else {
-                return "Table does not exist yet";
-            }
+            if (rs.next()) tableInitialized = true;
+            else return "Table does not exist yet";
+
         } catch(Exception e){
             return "An error occured while trying to load the table";
         }
@@ -66,12 +57,8 @@ class DatabaseHandler {
 
     public String getScores(int numRetrieve){
 
-        if(!tableInitialized){
-            return "Hey! The table is not initialized!";
-        }
-        if(numRetrieve <= 0){
-            return "Too few values to return";
-        }
+        if(!tableInitialized) return "Hey! The table is not initialized!";
+        if(numRetrieve <= 0) return "Too few values to return";
 
         String output_format = "%s:\t\tWins:%d\tLosses:%d\tDraws:%d\n";
         String output = "";
@@ -97,9 +84,8 @@ class DatabaseHandler {
     }
 
     public String createTable(){
-        if(!serverRunning){
-            return "Not connected to any SQL database!";
-        }
+        if(!serverRunning) return "Not connected to any SQL database!";
+
 
         try {
             Statement statement = conn.createStatement();
@@ -122,54 +108,50 @@ class DatabaseHandler {
         // Update the MySQL database for a username and what they
         // got. Should be as simple as incrementing a number in the database
 
-        if(!tableInitialized){
-            return "Can't update score! Table hasn't been initialized yet!";
-        }
+        if(!tableInitialized) return "Can't update score! Table hasn't been initialized yet!";
+
+        Boolean usernameExists = false;
 
         try {
-            Boolean usernameExists = false;
+
             Statement statement = conn.createStatement();
             String sqlStatement = String.format("SELECT * FROM scores WHERE username='%s'", username);
             ResultSet rs = statement.executeQuery(sqlStatement);
 
-            if (rs.next()){
-                usernameExists = true;
-            }
+            if (rs.next()) usernameExists = true;
 
             if(result == 0){
-                if (usernameExists) {
-                    sqlStatement = String.format("SELECT * FROM scores WHERE username='%s'", username);
-                }
-
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET losses=losses+1 WHERE username=%s ", username);
+                else  sqlStatement = String.format("INSERT INTO scores VALUES (%s, 0, 1, 0) ", username);
             }
-
             else if(result == 1){
-
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET wins=wins+1 WHERE username=%s ", username);
+                else sqlStatement = String.format("INSERT INTO scores VALUES (%s, 1, 0, 0) ", username);
             }
             else if(result == 2){
-
+                if (usernameExists) sqlStatement = String.format("UPDATE scores SET draws=draws+1 WHERE username=%s ", username);
+                else sqlStatement = String.format("INSERT INTO scores VALUES (%s, 0, 0, 1) ", username);
             }
-            //return true; // For success
-            return "Good";
+
+            return "Successfully updated scores!";
 
         } catch(Exception e){
               return "Error! Could not update scores!";
         }
     }
 
+    Boolean getServerStatus() {
+        return serverRunning;
+    }
+
+    Boolean getTableStatus() {
+        return tableInitialized;
+    }
+
     String getStatus(){
 
-        if(tableInitialized){
-            return "Database fully initialized";
-        }
-
-        else if(serverRunning){
-            return "Connected to database. No table created";
-        }
-
-        else{
-            return "Not connected to database";
-        }
-
+        if (tableInitialized) return "Database fully initialized";
+        else if (serverRunning) return "Connected to database. No table created";
+        else return "Not connected to database";
     }
 }

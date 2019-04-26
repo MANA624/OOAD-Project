@@ -19,7 +19,8 @@ class GameManager {
 
     void startProgram(){
         int response;
-
+        database.connectToDatabase();
+        database.loadTable();
         uinput.printToUser(database.getStatus());
         uinput.printToUser("Welcome to the chess game!");
 
@@ -33,6 +34,7 @@ class GameManager {
                 uinput.printToUser(database.createTable());
             }
             else if(response == 3){
+
                 uinput.printToUser("How many scores do you want to see?");
                 response = uinput.getInteger();
                 uinput.printToUser(database.getScores(response));
@@ -74,5 +76,14 @@ class GameManager {
                 uinput.printToUser("Check!");
             }
         }
+
+        if (!database.getTableStatus()) {
+          uinput.printToUser("Sorry, your scores can't be recorded because there is no table initialized!");
+          return;
+        }
+
+        
+
+
     }
 }

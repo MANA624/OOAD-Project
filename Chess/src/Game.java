@@ -71,4 +71,8 @@ class Game {
     String getPlayerTurn(){
         return isWhitesTurn ? "white" : "black";
     }
+
+    boolean getWhiteWon(){
+        return whiteWon;
+    }
 }
